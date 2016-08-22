@@ -178,6 +178,25 @@ namespace NuGet.Packaging.Tasks.Tests
                 Assert.Equal(1, frameworkSpecificGroup.Items.Count());
             }
         }
+
+        [Fact]
+        public async Task BuildNuProj_LinkedNuGetFile()
+        {
+            string sourceSolutionPath = Assets.GetScenarioSolutionPath();
+            string solutionPath = CopySolutionToTempDirectory(sourceSolutionPath);
+
+            await MSBuildRunner.RebuildAsync(solutionPath, buildNuGet: true);
+
+            string packagePath = Path.Combine(tempSolutionDirectory, "src", "bin", "Debug", "NuGetPackage.1.0.0.nupkg");
+
+            using (var reader = new PackageArchiveReader(File.OpenRead(packagePath))) {
+                var frameworkSpecificGroup = reader.GetLibItems().Single();
+
+                Assert.Equal("net45", frameworkSpecificGroup.TargetFramework.GetShortFolderName());
+                Assert.Contains("lib/net45/readme.txt", frameworkSpecificGroup.Items);
+                Assert.Equal(1, frameworkSpecificGroup.Items.Count());
+            }
+        }
     }
 }
 

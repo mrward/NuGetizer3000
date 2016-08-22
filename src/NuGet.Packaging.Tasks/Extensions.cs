@@ -77,6 +77,10 @@ namespace NuGet.Packaging.Tasks
             if (!string.IsNullOrEmpty(targetPath))
                 return targetPath;
 
+            targetPath = taskItem.GetMetadataAsPath("Link");
+            if (!string.IsNullOrEmpty(targetPath))
+                return targetPath;
+
             return taskItem.ItemSpec;
         }
 
