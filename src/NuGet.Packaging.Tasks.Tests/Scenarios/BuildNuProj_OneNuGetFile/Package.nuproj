@@ -28,7 +28,7 @@
   </PropertyGroup>
   <ItemGroup>
     <NuGetFile Include="Readme.txt">
-      <TargetPath>lib\net45</TargetPath>
+      <LogicalName>lib\net45</LogicalName>
     </NuGetFile>
   </ItemGroup>
   <Import Project="$(NuGetPackagingPath)\NuGet.Packaging.targets" />

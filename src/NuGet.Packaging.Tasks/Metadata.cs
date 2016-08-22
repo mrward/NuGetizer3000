@@ -6,7 +6,7 @@
         
         public const string FileSource = "FullPath";
         
-        public const string FileTarget = "TargetPath";
+        public const string FileTarget = "LogicalName";
 
         public const string PackageDirectory = "PackageDirectory";
         
