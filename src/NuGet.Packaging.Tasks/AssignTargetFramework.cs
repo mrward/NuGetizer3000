@@ -31,7 +31,7 @@ namespace NuGet.Packaging.Tasks
         private static ITaskItem ConvertToPackageFile(ITaskItem output)
         {
             var fileName = output.ItemSpec;
-            var targetPath = output.GetMetadata("TargetPath");
+            var targetPath = output.GetMetadata(Metadata.FileTarget);
             targetPath = string.IsNullOrEmpty(targetPath) ? Path.GetFileName(fileName) : targetPath;
             var frameworkNameMoniker = output.GetTargetFrameworkMoniker();
             var packageDirectory = output.GetPackageDirectory();

@@ -150,6 +150,34 @@ namespace NuGet.Packaging.Tasks.Tests
                 Assert.Equal(1, frameworkSpecificGroup.Items.Count());
             }
         }
+
+        [Fact]
+        public async Task BuildNuProj_TargetFromNuGetFileDirectory()
+        {
+            string sourceSolutionPath = Assets.GetScenarioSolutionPath();
+            string solutionPath = CopySolutionToTempDirectory(sourceSolutionPath);
+
+            await MSBuildRunner.RebuildAsync(solutionPath, buildNuGet: true);
+
+            string packagePath = Path.Combine(tempSolutionDirectory, "bin", "Debug", "NuGetPackage.1.0.0.nupkg");
+
+            using (var reader = new PackageArchiveReader(File.OpenRead(packagePath))) {
+                var nuspecReader = new NuspecReader(reader.GetNuspec());
+                var identity = reader.GetIdentity();
+                Assert.Equal("NuGetPackage", identity.Id);
+                Assert.Equal("1.0.0", identity.Version.ToString());
+                Assert.Equal("NuGetPackage", nuspecReader.GetId());
+                Assert.Equal("1.0.0", nuspecReader.GetVersion().ToString());
+
+                var files = reader.GetFiles().ToList();
+                var frameworkSpecificGroup = reader.GetLibItems().Single();
+                Assert.Contains("readme.txt", files);
+                Assert.Contains("lib/net45/test.xml", files);
+                Assert.Equal("net45", frameworkSpecificGroup.TargetFramework.GetShortFolderName());
+                Assert.Contains("lib/net45/test.xml", frameworkSpecificGroup.Items);
+                Assert.Equal(1, frameworkSpecificGroup.Items.Count());
+            }
+        }
     }
 }
 

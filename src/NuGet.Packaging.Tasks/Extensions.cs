@@ -71,6 +71,15 @@ namespace NuGet.Packaging.Tasks
             return metadataValue;
         }
 
+        public static string GetTargetPath(this ITaskItem taskItem)
+        {
+            string targetPath = taskItem.GetMetadataAsPath(Metadata.FileTarget);
+            if (!string.IsNullOrEmpty(targetPath))
+                return targetPath;
+
+            return taskItem.ItemSpec;
+        }
+
         public static PackageDirectory GetPackageDirectory(this ITaskItem taskItem)
         {
             var packageDirectoryName = taskItem.GetMetadata(Metadata.PackageDirectory);
