@@ -18,7 +18,7 @@ temp
 project.lock.json
 *.nuget.props
 *.nuget.targets
-
+*.DS_Store
 
 
 log.txt
