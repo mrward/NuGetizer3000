@@ -152,11 +152,22 @@
 
     <ApiIntersect
       Framework="%(ReferenceAssemblyFramework.Identity)"
-      OutputDirectory="$(IntermediateOutputPath)"
+      RootOutputDirectory="$(IntermediateOutputPath)"
       IntersectionAssembly="@(IntersectionAssembly)"
       ToolPath="$(ApiIntersectToolPath)"
       ToolExe="$(ApiIntersectToolExe)">
+      <Output TaskParameter="OutputDirectory" ItemName="_ReferenceAssemblyBuildInfo" />
     </ApiIntersect>
+
+   <MSBuild
+      Projects="$(MSBuildThisFileDirectory)GenerateReferenceAssembly.csproj"
+      Properties="
+        AssemblyName=$(AssemblyName);
+        SrcDir=%(_ReferenceAssemblyBuildInfo.FullPath);
+        OutputPath=%(_ReferenceAssemblyBuildInfo.FullPath)bin\;
+        IntermediateOutputPath=%(_ReferenceAssemblyBuildInfo.FullPath)obj\;
+        TargetFrameworkVersion=%(_ReferenceAssemblyBuildInfo.TargetFrameworkVersion);
+        TargetFrameworkProfile=%(_ReferenceAssemblyBuildInfo.TargetFrameworkProfile)" />
   </Target>
 
   <Import Project="$(CustomAfterNuProjTargets)" Condition="'$(CustomAfterNuProjTargets)' != '' and Exists('$(CustomAfterNuProjTargets)')"/>

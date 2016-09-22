@@ -66,6 +66,9 @@
       <Link>NuGet.Packaging.props</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="GenerateReferenceAssembly.csproj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\ApiIntersect\ApiIntersect\ApiIntersect.csproj">

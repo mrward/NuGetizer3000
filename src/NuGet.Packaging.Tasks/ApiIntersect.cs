@@ -16,6 +16,9 @@ namespace NuGet.Packaging.Tasks
         public ITaskItem[] IntersectionAssembly { get; set; }
 
         [Required]
+        public ITaskItem RootOutputDirectory { get; set; }
+
+        [Output]
         public ITaskItem OutputDirectory { get; set; }
 
         protected override string ToolName
@@ -40,8 +43,8 @@ namespace NuGet.Packaging.Tasks
             var nugetFramework = NuGetFramework.Parse(Framework.ItemSpec);
 
             builder.AppendSwitch("-o");
-            string fullOutputPath = Path.Combine(OutputDirectory.ItemSpec, GetOutputDirectoryName(nugetFramework));
-            builder.AppendFileNameIfNotNull(fullOutputPath);
+            CreateOutputDirectoryItem(nugetFramework);
+            builder.AppendFileNameIfNotNull(OutputDirectory.ItemSpec);
 
             string frameworkPath = GetFrameworkPath(nugetFramework);
             builder.AppendSwitch("-f");
@@ -54,6 +57,14 @@ namespace NuGet.Packaging.Tasks
             }
 
             return builder.ToString();
+        }
+
+        void CreateOutputDirectoryItem(NuGetFramework framework)
+        {
+            string fullOutputPath = Path.Combine(RootOutputDirectory.ItemSpec, GetOutputDirectoryName(framework));
+            OutputDirectory = new TaskItem(fullOutputPath + Path.DirectorySeparatorChar);
+            OutputDirectory.SetMetadata("TargetFrameworkVersion", "v" + framework.Version.ToString(2));
+            OutputDirectory.SetMetadata("TargetFrameworkProfile", framework.Profile);
         }
 
         string GetFrameworkPath(NuGetFramework framework)
@@ -70,7 +81,7 @@ namespace NuGet.Packaging.Tasks
         {
             return Path.Combine(
                 GetPortableRootDirectory(),
-                string.Format("v{0}.{1}", framework.Version.Major, framework.Version.Minor),
+                "v" + framework.Version.ToString(2),
                 "Profile",
                 framework.Profile);
         }
