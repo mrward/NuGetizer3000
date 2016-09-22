@@ -47,6 +47,7 @@
     <Compile Include="AssignTargetFramework.cs" />
     <Compile Include="ReadPackagesConfig.cs" />
     <Compile Include="ReadProjectJson.cs" />
+    <Compile Include="ApiIntersect.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\NuGet.Packages.Targets\NuGet.Packaging.Common.props">
@@ -65,6 +66,12 @@
       <Link>NuGet.Packaging.props</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\external\ApiIntersect\ApiIntersect\ApiIntersect.csproj">
+      <Project>{CD767D93-6C99-4D6A-A303-3C139A73400E}</Project>
+      <Name>ApiIntersect</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

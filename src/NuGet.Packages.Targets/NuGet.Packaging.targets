@@ -115,8 +115,14 @@
     <NuGetDevelopmentDependency>$(DevelopmentDependency)</NuGetDevelopmentDependency>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <GetNuGetInfoDependsOn>_GenerateReferenceAssemblies;$(GetNuGetInfoDependsOn)</GetNuGetInfoDependsOn>
+  </PropertyGroup>
+
   <Import Project="$(NuGetPackagingPath)\NuGet.Packaging.Common.targets"
           Condition="Exists('$(NuGetPackagingPath)\NuGet.Packaging.Common.targets')" />
+
+  <UsingTask TaskName="NuGet.Packaging.Tasks.ApiIntersect" AssemblyFile="$(NuGetTasksPath)" />
 
   <PropertyGroup>
     <NuGetTargetFrameworkMoniker>any</NuGetTargetFrameworkMoniker>
@@ -128,6 +134,30 @@
 
   <Target Name="CoreCompile" />
   <Target Name="CreateManifestResourceNames" Condition="false" />
+
+  <Target Name="_GenerateReferenceAssemblies" Condition=" '@(ReferenceAssemblyFramework)' != '' ">
+
+    <ItemGroup>
+      <_ProjectReferenceForReferenceAssembly
+        Include="@(ProjectReference)"
+        Condition="'%(ProjectReference.ReferenceOutputAssembly)' != 'False'" />
+    </ItemGroup>
+
+    <MSBuild
+      Projects="@(_ProjectReferenceForReferenceAssembly)"
+      Targets="GetTargetPath"
+      Condition="('$(BuildingSolutionFile)'=='true' or '$(BuildingInsideVisualStudio)'=='true')">
+      <Output TaskParameter="TargetOutputs" ItemName="IntersectionAssembly"/>
+    </MSBuild>
+
+    <ApiIntersect
+      Framework="%(ReferenceAssemblyFramework.Identity)"
+      OutputDirectory="$(IntermediateOutputPath)"
+      IntersectionAssembly="@(IntersectionAssembly)"
+      ToolPath="$(ApiIntersectToolPath)"
+      ToolExe="$(ApiIntersectToolExe)">
+    </ApiIntersect>
+  </Target>
 
   <Import Project="$(CustomAfterNuProjTargets)" Condition="'$(CustomAfterNuProjTargets)' != '' and Exists('$(CustomAfterNuProjTargets)')"/>
 

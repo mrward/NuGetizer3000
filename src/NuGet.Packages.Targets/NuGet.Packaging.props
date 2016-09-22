@@ -26,6 +26,8 @@
     <NuProjToolPath Condition=" '$(NuProjToolPath)' == '' ">$(MSBuildThisFileDirectory)</NuProjToolPath>
     <NuGetToolPath Condition=" '$(NuGetToolPath)' == '' ">$(NuProjToolPath)</NuGetToolPath>
     <NuGetToolExe Condition=" '$(NuGetToolExe)' == '' ">NuGet.exe</NuGetToolExe>
+    <ApiIntersectToolPath Condition=" '$(ApiIntersectTool)' == '' ">$(MSBuildThisFileDirectory)</ApiIntersectToolPath>
+    <ApiIntersectToolExe Condition=" '$(ApiIntersectToolExe)' == '' ">ApiIntersect.exe</ApiIntersectToolExe>
   </PropertyGroup>
 
   <!--
