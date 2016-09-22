@@ -1,3 +1,6 @@
 [submodule "external/clide"]
 	path = external/clide
 	url = git@github.com:clariuslabs/clide.git
+[submodule "external/ApiIntersect"]
+	path = external/ApiIntersect
+	url = git@github.com:xamarin/ApiIntersect.git
