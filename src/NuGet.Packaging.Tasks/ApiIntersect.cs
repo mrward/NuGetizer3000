@@ -68,10 +68,27 @@ namespace NuGet.Packaging.Tasks
 
         string GetPortableLibraryPath(NuGetFramework framework)
         {
-            return string.Format("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/xbuild-frameworks/.NETPortable/v{0}.{1}/Profile/{2}/",
-                framework.Version.Major,
-                framework.Version.Minor,
+            return Path.Combine(
+                GetPortableRootDirectory(),
+                string.Format("v{0}.{1}", framework.Version.Major, framework.Version.Minor),
+                "Profile",
                 framework.Profile);
+        }
+
+        static string GetPortableRootDirectory()
+        {
+            if (EnvironmentUtility.IsMonoRuntime)
+            {
+                string macPath = "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/xbuild-frameworks/.NETPortable/";
+                if (Directory.Exists(macPath))
+                    return macPath;
+
+                return Path.Combine(Path.GetDirectoryName(typeof(Object).Assembly.Location), "../xbuild-frameworks/.NETPortable/");
+            }
+
+            return Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86, Environment.SpecialFolderOption.DoNotVerify),
+                @"Reference Assemblies\Microsoft\Framework\.NETPortable");
         }
 
         string GetOutputDirectoryName(NuGetFramework framework)
