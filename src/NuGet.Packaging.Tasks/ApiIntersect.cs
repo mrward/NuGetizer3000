@@ -65,6 +65,7 @@ namespace NuGet.Packaging.Tasks
             OutputDirectory = new TaskItem(fullOutputPath + Path.DirectorySeparatorChar);
             OutputDirectory.SetMetadata("TargetFrameworkVersion", "v" + framework.Version.ToString(2));
             OutputDirectory.SetMetadata("TargetFrameworkProfile", framework.Profile);
+            OutputDirectory.SetMetadata(Metadata.TargetFrameworkMoniker, Framework.ItemSpec);
         }
 
         string GetFrameworkPath(NuGetFramework framework)

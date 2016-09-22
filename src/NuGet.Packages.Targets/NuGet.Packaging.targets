@@ -168,6 +168,20 @@
         IntermediateOutputPath=%(_ReferenceAssemblyBuildInfo.FullPath)obj\;
         TargetFrameworkVersion=%(_ReferenceAssemblyBuildInfo.TargetFrameworkVersion);
         TargetFrameworkProfile=%(_ReferenceAssemblyBuildInfo.TargetFrameworkProfile)" />
+
+    <CreateItem
+      Include="@(_ReferenceAssemblyBuildInfo->'%(Identity)bin\$(AssemblyName).dll')"
+      AdditionalMetadata="TargetFrameworkMoniker=%(_ReferenceAssemblyBuildInfo.TargetFrameworkMoniker)">
+      <Output
+        TaskParameter="Include"
+        ItemName="_ReferenceAssemblyWithTargetFramework" />
+    </CreateItem>
+
+    <AssignTargetFramework OutputsWithTargetFrameworkInformation="@(_ReferenceAssemblyWithTargetFramework)">
+      <Output
+        TaskParameter="PackageFiles"
+        ItemName="NuGetFile" />
+    </AssignTargetFramework>
   </Target>
 
   <Import Project="$(CustomAfterNuProjTargets)" Condition="'$(CustomAfterNuProjTargets)' != '' and Exists('$(CustomAfterNuProjTargets)')"/>
