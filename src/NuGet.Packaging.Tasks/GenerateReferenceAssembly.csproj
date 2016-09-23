@@ -23,8 +23,22 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="$(SrcDir)Contract\**\*.cs" />
-  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+
+  <PropertyGroup>
+    <PrepareResourcesDependsOn>
+      _CollectCompileFiles;
+      $(PrepareResourcesDependsOn)
+    </PrepareResourcesDependsOn>
+  </PropertyGroup>
+
+  <Target Name="_CollectCompileFiles">
+    <!-- use property function since ** returns the same file twice with xbuild resulting in a compile warning. -->
+    <PropertyGroup>
+      <_CompileFiles>$([System.IO.Directory]::GetFiles('$(SrcDir)Contract\', '*.cs', SearchOption.AllDirectories))</_CompileFiles>
+    </PropertyGroup>
+    <ItemGroup>
+      <Compile Include="$(_CompileFiles)" />
+    </ItemGroup>
+  </Target>
 </Project>
