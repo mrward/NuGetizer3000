@@ -133,6 +133,10 @@
     <PrepareForRunDependsOn></PrepareForRunDependsOn>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <CleanDependsOn>$(CleanDependsOn);_CleanReferenceAssemblyIntermediateOutputs</CleanDependsOn>
+  </PropertyGroup>
+
   <Target Name="CoreCompile" />
   <Target Name="CreateManifestResourceNames" Condition="false" />
 
@@ -189,6 +193,17 @@
         TaskParameter="PackageFiles"
         ItemName="NuGetFile" />
     </AssignTargetFramework>
+  </Target>
+
+  <Target Name="_CleanReferenceAssemblyIntermediateOutputs" Condition=" '@(ReferenceAssemblyFramework)' != '' ">
+    <PropertyGroup>
+      <_ReferenceAssemblyIntermediateOutputDirectories>$([System.IO.Directory]::GetDirectories('$(IntermediateOutputPath)'))</_ReferenceAssemblyIntermediateOutputDirectories>
+    </PropertyGroup>
+    <ItemGroup>
+      <_ReferenceAssemblyIntermediateOutputDirectory Include="$(_ReferenceAssemblyIntermediateOutputDirectories)" />
+    </ItemGroup>
+
+    <RemoveDir Directories="@(_ReferenceAssemblyIntermediateOutputDirectory)" />
   </Target>
 
   <Import Project="$(CustomAfterNuProjTargets)" Condition="'$(CustomAfterNuProjTargets)' != '' and Exists('$(CustomAfterNuProjTargets)')"/>
