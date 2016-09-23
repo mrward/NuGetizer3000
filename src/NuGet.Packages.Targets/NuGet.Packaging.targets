@@ -123,6 +123,7 @@
           Condition="Exists('$(NuGetPackagingPath)\NuGet.Packaging.Common.targets')" />
 
   <UsingTask TaskName="NuGet.Packaging.Tasks.ApiIntersect" AssemblyFile="$(NuGetTasksPath)" />
+  <UsingTask TaskName="NuGet.Packaging.Tasks.GenerateAssemblyInfo" AssemblyFile="$(NuGetTasksPath)" />
 
   <PropertyGroup>
     <NuGetTargetFrameworkMoniker>any</NuGetTargetFrameworkMoniker>
@@ -159,10 +160,16 @@
       <Output TaskParameter="OutputDirectory" ItemName="_ReferenceAssemblyBuildInfo" />
     </ApiIntersect>
 
+    <GenerateAssemblyInfo
+      Assemblies="@(IntersectionAssembly)"
+      OutputDirectories="@(_ReferenceAssemblyBuildInfo->'%(Identity)Contract')">
+      <Output TaskParameter="AssemblyName" PropertyName="_ReferenceAssemblyName" />
+    </GenerateAssemblyInfo>
+
    <MSBuild
       Projects="$(MSBuildThisFileDirectory)GenerateReferenceAssembly.csproj"
       Properties="
-        AssemblyName=$(AssemblyName);
+        AssemblyName=$(_ReferenceAssemblyName);
         SrcDir=%(_ReferenceAssemblyBuildInfo.FullPath);
         OutputPath=%(_ReferenceAssemblyBuildInfo.FullPath)bin\;
         IntermediateOutputPath=%(_ReferenceAssemblyBuildInfo.FullPath)obj\;
@@ -170,7 +177,7 @@
         TargetFrameworkProfile=%(_ReferenceAssemblyBuildInfo.TargetFrameworkProfile)" />
 
     <CreateItem
-      Include="@(_ReferenceAssemblyBuildInfo->'%(Identity)bin\$(AssemblyName).dll')"
+      Include="@(_ReferenceAssemblyBuildInfo->'%(Identity)bin\$(_ReferenceAssemblyName).dll')"
       AdditionalMetadata="TargetFrameworkMoniker=%(_ReferenceAssemblyBuildInfo.TargetFrameworkMoniker)">
       <Output
         TaskParameter="Include"

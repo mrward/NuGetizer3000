@@ -48,6 +48,7 @@
     <Compile Include="ReadPackagesConfig.cs" />
     <Compile Include="ReadProjectJson.cs" />
     <Compile Include="ApiIntersect.cs" />
+    <Compile Include="GenerateAssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\NuGet.Packages.Targets\NuGet.Packaging.Common.props">
