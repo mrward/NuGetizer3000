@@ -195,7 +195,7 @@
     </AssignTargetFramework>
   </Target>
 
-  <Target Name="_CleanReferenceAssemblyIntermediateOutputs" Condition=" '@(ReferenceAssemblyFramework)' != '' ">
+  <Target Name="_CleanReferenceAssemblyIntermediateOutputs" Condition=" '@(ReferenceAssemblyFramework)' != '' and Exists('$(IntermediateOutputPath)') ">
     <PropertyGroup>
       <_ReferenceAssemblyIntermediateOutputDirectories>$([System.IO.Directory]::GetDirectories('$(IntermediateOutputPath)'))</_ReferenceAssemblyIntermediateOutputDirectories>
     </PropertyGroup>
